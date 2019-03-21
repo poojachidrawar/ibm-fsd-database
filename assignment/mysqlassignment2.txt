@@ -1,0 +1,42 @@
+classicModel database
+
+1) List of employees under each manager
+
+select e1.firstname, count(*) 
+from employees e1,employees e2 
+where e1.employeeNumber = e2.reportsTo group by e2.reportsTo;
+
+2)List customer wise unique products
+
+SELECT customername,(select productName from products) as productname 
+FROM customers 
+WHERE customerNumber IN(SELECT DISTINCT customernumber FROM orders os where 
+exists(select productName from products p,orderdetails o w
+here p.productCode = o.productCode));
+
+3)List product wise total order amount
+
+select sum(ord.quantityOrdered), p.productName 
+from payments pay, products p, customers c, orders o, orderdetails ord 
+where c.customerNumber=o.customerNumber and o.orderNumber=ord.orderNumber 
+       and ord.ProductCode=p.productCode and c.customerNumber=pay.customerNumber 
+group by p.productName;
+
+
+4)List details of manager who has highest sales
+
+select max(amount ) 
+from payments pay 
+where amount>(select sum(amount), e.jobTitle 
+from employee e, payments pay, products p, customers c, orders o, orderdetails ord 
+where e.employeeNumber=c.salesRepEmployeeNumber, c.customerNumber=o.customerNumber and o.orderNumber=ord.orderNumber and ord.productCode=p.productCode and c.customerNumber=pay.customerNumber 
+group by e.jobTitle having e.jobTitle like "%Manager");
+
+5)List month wise no. of orders placed for each product line
+
+select count(ord.quantityOrdered), (select month(o.orderDate)), p.productLine 
+from orders o, orderDetails ord, products p 
+where o.orderNumber=ord.orderNumber and ord.productCode=p.productCode 
+group by p.productLine,(select month(o.orderDate)) 
+order by count(ord.quantityOrdered);
+

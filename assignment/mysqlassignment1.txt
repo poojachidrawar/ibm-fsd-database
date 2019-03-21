@@ -1,0 +1,33 @@
+1) List departmentwise employee count
+
+SELECT DEPT_ID, COUNT(*) FROM EMPLOYEE GROUP BY DEPT_ID;
+
+
+2)List department having salary greater than 50000
+
+select dept_name, salary 
+from department,employee 
+where department.dept_id=employee.dept_id 
+group by salary>50000;
+
+
+3)Calculate average salary country and department wise
+
+select avg(sal) 
+from employee, department, country 
+group by employee.dept_id and country_id;
+
+4)List Country and Department have Employee count more than 2 order by Department name
+
+select country.name 
+from country, department, employee 
+where employee.dept_id=department.dept_id and country.id=employee.country_id
+group by country_id 
+having count(employee.id)>2 order by dept_name;
+
+5)List Department with Employee name contains 'sa' and exists more than One Country
+
+select count(employee.name), dept_name 
+from employee,department,country 
+where employee.name like "%si%" and employee.dept_id=department.dept_id and country.id=employee.country_id 
+group by country_name;
